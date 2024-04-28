@@ -44,9 +44,10 @@ func (s *Server) PostEstateIdTree(ctx echo.Context, id string) error {
 	}
 
 	ctx.Bind(&params)
-	if (params.X < 1 || params.X > estate.Width) || (params.Y < 1 || params.Y > estate.Length) {
+	if params.X < 1 || params.X > estate.Length || params.Y < 1 || params.Y > estate.Width {
 		return sendErrorFormat(ctx, http.StatusBadRequest, "Bad Client Request")
 	}
+
 	input := repository.InsertEstateObjectInput(params)
 
 	idObject, err := s.Repository.InsertEstateObject(ctx.Request().Context(), id, input)
