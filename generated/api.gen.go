@@ -31,19 +31,9 @@ type DronePlanResponse struct {
 	} `json:"rest,omitempty"`
 }
 
-// ErrorResponse defines model for ErrorResponse.
-type ErrorResponse struct {
-	Message string `json:"message"`
-}
-
 // ErrorResponseApi defines model for ErrorResponseApi.
 type ErrorResponseApi struct {
 	Code    int    `json:"code"`
-	Message string `json:"message"`
-}
-
-// HelloResponse defines model for HelloResponse.
-type HelloResponse struct {
 	Message string `json:"message"`
 }
 
@@ -78,11 +68,6 @@ type PostEstateIdTreeJSONBody struct {
 	Y      int `json:"y"`
 }
 
-// GetHelloParams defines parameters for GetHello.
-type GetHelloParams struct {
-	Id int `form:"id" json:"id"`
-}
-
 // PostEstateJSONRequestBody defines body for PostEstate for application/json ContentType.
 type PostEstateJSONRequestBody PostEstateJSONBody
 
@@ -103,9 +88,6 @@ type ServerInterface interface {
 	// Store tree data in a given estate
 	// (POST /estate/{id}/tree)
 	PostEstateIdTree(ctx echo.Context, id string) error
-	// This is just a test endpoint to get you started.
-	// (GET /hello)
-	GetHello(ctx echo.Context, params GetHelloParams) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -179,24 +161,6 @@ func (w *ServerInterfaceWrapper) PostEstateIdTree(ctx echo.Context) error {
 	return err
 }
 
-// GetHello converts echo context to params.
-func (w *ServerInterfaceWrapper) GetHello(ctx echo.Context) error {
-	var err error
-
-	// Parameter object where we will unmarshal all parameters from the context
-	var params GetHelloParams
-	// ------------- Required query parameter "id" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "id", ctx.QueryParams(), &params.Id)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
-	}
-
-	// Invoke the callback with all the unmarshaled arguments
-	err = w.Handler.GetHello(ctx, params)
-	return err
-}
-
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -229,29 +193,26 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/estate/:id/drone-plan", wrapper.GetEstateIdDronePlan)
 	router.GET(baseURL+"/estate/:id/stats", wrapper.GetEstateIdStats)
 	router.POST(baseURL+"/estate/:id/tree", wrapper.PostEstateIdTree)
-	router.GET(baseURL+"/hello", wrapper.GetHello)
 
 }
 
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

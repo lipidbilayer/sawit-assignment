@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/SawitProRecruitment/UserService/generated"
@@ -16,12 +15,6 @@ func sendErrorFormat(ctx echo.Context, code int, message string) error {
 	}
 	err := ctx.JSON(code, petErr)
 	return err
-}
-
-func (s *Server) GetHello(ctx echo.Context, params generated.GetHelloParams) error {
-	var resp generated.HelloResponse
-	resp.Message = fmt.Sprintf("Hello User %d", params.Id)
-	return ctx.JSON(http.StatusOK, resp)
 }
 
 func (s *Server) PostEstate(ctx echo.Context) error {
@@ -51,7 +44,7 @@ func (s *Server) PostEstateIdTree(ctx echo.Context, id string) error {
 	}
 
 	ctx.Bind(&params)
-	if (params.X < 1 && params.X > estate.Width) || (params.Y < 1 && params.Y > estate.Length) {
+	if (params.X < 1 || params.X > estate.Width) || (params.Y < 1 || params.Y > estate.Length) {
 		return sendErrorFormat(ctx, http.StatusBadRequest, "Bad Client Request")
 	}
 	input := repository.InsertEstateObjectInput(params)
